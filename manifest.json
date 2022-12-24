@@ -1,0 +1,10 @@
+{
+    "id": "Advanced-Notes-Manager",
+    "name": "Advanced Notes Manager",
+    "description": "Automatically create, rename, move and delete notes based on configurable rules.",
+    "isDesktopOnly": false,
+    "author": "Mrteathyme",
+    "fundingUrl": "https://ko-fi.com/mrteathyme",
+    "js": "main.js",
+    "version": "0.0.1"
+}
