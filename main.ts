@@ -21,14 +21,20 @@ export default class DailyActivityTrackerPlugin extends Plugin {
 
 	}
 
+
     private create_event_handler = async (created: TAbstractFile) => {
         if (created instanceof TFile) {
+
             let today = new Date();
             let dateformatted = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
             let folderPath = normalizePath(`${dateformatted}`);
             if (created.extension !== 'md') {
                 folderPath = normalizePath(folderPath + '/Attachments');
             }
+
+            //ToDo: Find a better way than just sleeping, e.g retrieve a promise from the workspace file open event and await it maybe?
+            await sleep(50);
+
             if (this.app.vault.getAbstractFileByPath(folderPath) == null) {
                 await this.app.vault.createFolder(folderPath);
                 new Notice(`created new daily folder: ${folderPath}`);
@@ -41,6 +47,7 @@ export default class DailyActivityTrackerPlugin extends Plugin {
                 return;
             }
             await this.app.vault.rename(created, folderPath + '/' + created.basename  + '.' + created.extension)
+            //this.updateDailyNote(created);
             new Notice(`Moved "${created.basename  + '.' + created.extension}" to ${folderPath}`);
         }
     }
@@ -55,7 +62,7 @@ export default class DailyActivityTrackerPlugin extends Plugin {
             if (dailyNote == null) {
                 //ToDo: Add Template Settings and Tag settings, just gonna hardcode with the tags i use for now
                 dailyNote = await this.app.vault.create(dailyNoteName, "---\nTags: [daily, organisation]\n---\n\n");
-                new Notice(`created daily note: ${dailyNoteName}`);
+                new Notice(`created daily note: ${dailyNoteName}`);   
             }
             if (dailyNote instanceof TFile) {
                 //ToDo: Section Formatting instead of just appending
